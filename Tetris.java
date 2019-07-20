@@ -1,13 +1,22 @@
 import java.util.*; 
 
+interface Stack
+{
+    
+}
+
+
+class Undo implements Stack
+{
+    public static char operation;
+}
+
 class Board
 {
    public static  int max_rows=20;
   public static  int max_cols=20;
 public static char[][] screen=new char[20][20];
     public static int[] flag=new int[20];
- 
-    
     
     Board()
     {
@@ -63,10 +72,7 @@ for(i=0;i<20;i++)
         { screen[j]=screen[j-1];
          flag[j]=flag[j-1];
         }
-        
-        screen[0][0]='*';
-        screen[0][19]='*';
-        
+  
     }
 }
         
@@ -216,6 +222,24 @@ shape[1].x=shape[1].x+1;
 shape[2].x=shape[2].x+1;
 
 shape[3].x=shape[3].x+1;
+
+}
+    
+    void up(){
+
+
+if(shape[0].x==1||shape[1].x==1||shape[2].x==1||shape[3].x==1)
+return;
+
+shape[0].x=shape[0].x-1;
+
+
+shape[1].x=shape[1].x-1;
+
+
+shape[2].x=shape[2].x-1;
+
+shape[3].x=shape[3].x-1;
 
 }
 
@@ -1206,9 +1230,22 @@ Random rand = new Random();
     
 public static void main(String args[])
 {
+    
+    char ch;
 Tetris T=new Tetris();
     Board b=new Board();
     
+            
+        Undo u[]=new Undo[10];
+        Undo r[]=new Undo[10];
+        
+      
+        for(int i=0;i<10;i++)
+        {
+            u[i]=new Undo();
+            r[i]=new Undo();
+        }
+        int undosize=0,redosize=0;
     
  T.random_generate();
     Shapes s=new Shapes();
@@ -1216,6 +1253,8 @@ Tetris T=new Tetris();
     
     
     int over=0;
+    
+    T.clearscreen();
     
     if(T.shape_no==0)
     { s=new Stick();
@@ -1264,10 +1303,21 @@ Tetris T=new Tetris();
     {
      fixed=0;
         over=0;
+        ch=move;
         if(move=='l')
         {
           
-            
+            if(s1.check_left()==1)
+            {
+                fixed=1;
+                  if(s1.update_flag()==1)
+                over=1;
+                s.remove_prevshape();
+                
+                
+            }
+            else
+            {
             s.left();
             s1=s;
 
@@ -1278,28 +1328,26 @@ Tetris T=new Tetris();
 
             
           s.remove_prevshape(); 
-    
-
-        if(s.check_left()==1)
-          {
-              fixed=1;
-            if(s1.update_flag()==1)
-                over=1;
+                
             
-    
-          }
-          else
-s1.remove_prevshape();
-            
-            
+                
+            }
+   
         }
         
        else if(move=='r')
        {
           
+          if(s.check_right()==1)
+          {
+              fixed=1;
+                if( s1.update_flag()==1)
+                   over=1;
+              s.remove_prevshape();
+          }
            
-           
-           
+           else
+           {
            s.right();
            s1=s;
  
@@ -1307,25 +1355,47 @@ s1.remove_prevshape();
            s1.generate_shape();
             b.display();
            
-          s.remove_prevshape();  
-    
-            if(s.check_right()==1)
-           {
-             fixed=1;
-               if( s1.update_flag()==1)
-                   over=1;
-            
-
+          s.remove_prevshape();
+               
+              
            }
-         else
-          s1.remove_prevshape();
+  
+           
+       }
+        
+          
+       else if(move=='w')
+       {
+          
+        
+           s.up();
+           s1=s;
+ 
+       s.generate_shape();
+           s1.generate_shape();
+            b.display();
+           
+          s.remove_prevshape();
+           s1.remove_prevshape();
+               
+             
            
        }
         
         else if(move=='b')
         {
            
-       
+       if(s1.check_bottom()==1)
+       {
+           fixed=1;
+             if( s1.update_flag()==1)
+       over=1;
+           s.remove_prevshape();
+           
+           
+       }
+            else
+            {
             s.bottom();  
             s1=s;
  
@@ -1334,21 +1404,12 @@ s1.remove_prevshape();
             
                b.display();
                 s.remove_prevshape(); 
+                
+           
           
         
-  
-          
-    
-         if(s.check_bottom()==1)
-            {
-                fixed=1;
-   if( s1.update_flag()==1)
-       over=1;
-               
-            
             }
-            else
-           s1.remove_prevshape(); 
+     
            
           }
         
@@ -1366,23 +1427,33 @@ s1.remove_prevshape();
           s.remove_prevshape();
        s1.remove_prevshape();
      }
- 
+    
+        else if(move=='u')
+        {
+               
+            
+          
+            
+            
+            
+        }
+        
+    
+ else if(move=='o')
+ {
+     
+ }
          
          if(fixed==1)
         {
-        
-       s=s1;
-             s.generate_shape();
-             b.display();
              
+            undosize=0;
+        
+     s=s1;
+ 
                 if(over==1)
                     break;
-             
-   T.clearscreen();
-             
- 
-        
-          
+  
        s.generate_shape();
        s1.generate_shape();
              
