@@ -1,15 +1,70 @@
 import java.util.*; 
 
-interface Stack
+interface Mystack
 {
+    public void pop();
+    public void push(char ch);
+    public char peek();
+    public Link delete();
+    public boolean isEmpty();
+}
+
+class Link
+{
+    public char option;
+    public Link nextLink;
     
+       public Link(char ch)
+    {
+    option= ch;
+        nextLink=null;
+    }
 }
 
 
-class Undo implements Stack
+class Stack_List  implements Mystack
 {
-    public static char operation;
-}
+    private Link top;
+    public Stack_List()
+    {
+        top = null;
+    }
+    public boolean isEmpty()
+    {
+        return top == null;
+    }
+    
+     public void push(char ch)
+    {
+      
+            Link link = new Link(ch);
+            link.nextLink =top;
+        top = link;
+       
+    }
+    
+      public Link delete()
+    {
+        Link temp =top;
+        
+            top = top.nextLink;
+        
+        return temp;
+    }
+    
+    public void pop()
+    {
+       
+            Link deletedLink = delete();
+     
+       
+    }
+    public char peek()
+    {
+    return top.option;
+    }
+    
+    }
 
 class Board
 {
@@ -111,6 +166,9 @@ shape=new Point[4];
 
 }
 
+    
+    void rotate_clockwise(){}
+    void rotate_anticlockwise(){}
 void cordinates()
 {
 
@@ -173,7 +231,7 @@ int check_bottom()
 }
     
 
-void select_version(){}
+//void select_version(){}
 
 void left(){
 
@@ -225,11 +283,11 @@ shape[3].x=shape[3].x+1;
 
 }
     
-    void up(){
+    int up(){
 
 
 if(shape[0].x==1||shape[1].x==1||shape[2].x==1||shape[3].x==1)
-return;
+return 1;
 
 shape[0].x=shape[0].x-1;
 
@@ -240,6 +298,8 @@ shape[1].x=shape[1].x-1;
 shape[2].x=shape[2].x-1;
 
 shape[3].x=shape[3].x-1;
+        
+        return 0;
 
 }
 
@@ -316,102 +376,156 @@ shape[3]=new Point(4,col);
 }
 
 
-void select_version()
+
+void rotate_clockwise()
 {
 if(version==1)
-{version=2;
-v2();
+{
+if(shape[0].y+3<max_cols-1)
+{
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y+1;
+
+shape[2].x=shape[0].x;
+shape[2].y=shape[0].y+2;
+
+shape[3].x=shape[0].x;
+shape[3].y=shape[0].y+3;
+
+version++;
 }
 
-else
+}
+
+else if(version==2)
 {
+if(shape[0].x+3<max_cols-1)
+{
+shape[1].x=shape[0].x+1;
+shape[1].y=shape[0].y;
+
+shape[2].x=shape[0].x+2;
+shape[2].y=shape[0].y;
+
+shape[3].x=shape[0].x+3;
+shape[3].y=shape[0].y;
+
+version++;
+}
+}
+
+else if(version==3)
+{
+if(shape[0].y-3>0)
+{
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y-1;
+
+shape[2].x=shape[0].x;
+shape[2].y=shape[0].y-2;
+
+shape[3].x=shape[0].x;
+shape[3].y=shape[0].y-3;
+
+version++;
+}
+}
+
+else if(version==4)
+{
+if(shape[0].y-3>0)
+{
+shape[1].x=shape[0].x+1;
+shape[1].y=shape[0].y;
+
+shape[2].x=shape[0].x+2;
+shape[2].y=shape[0].y;
+
+shape[3].x=shape[0].x+3;
+shape[3].y=shape[0].y;
+
 version=1;
-v1();
 }
 }
 
 
-void v1()
+}
+
+
+void rotate_anticlockwise()
 {
-int t=0;
-
-if(check_boundary(shape[0].x,shape[0].y)==1)
+System.out.println(version);
+if(version==1)
 {
-
-if(check_boundary(shape[1].x+1,shape[1].y-1)==1)
+if(shape[0].y-3>0)
 {
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y-1;
 
-if(check_boundary(shape[2].x+2,shape[2].y-2)==1)
+shape[2].x=shape[0].x;
+shape[2].y=shape[0].y-2;
+
+shape[3].x=shape[0].x;
+shape[3].y=shape[0].y-3;
+version=4;
+}
+
+}
+
+else if(version==2)
 {
-if(check_boundary(shape[3].x+3,shape[3].y-3)==1)
+if(shape[0].y-3>0)
 {
-t=1;
-}
-}
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y-1;
+
+shape[2].x=shape[0].x;
+shape[2].y=shape[0].y-2;
+
+shape[3].x=shape[0].x;
+shape[3].y=shape[0].y-3;
+
+version--;
 }
 }
 
-if(t==1)
+else if(version==3)
 {
-
-shape[0].x=shape[0].x;
-shape[0].y=shape[0].y;
-
-shape[1].x=shape[1].x+1;
-shape[1].y=shape[1].y-1;
-
-shape[2].x=shape[2].x+2;
-shape[2].y=shape[2].y-2;
-
-shape[3].x=shape[3].x+3;
-shape[3].y=shape[3].y-3;
-}
-else
-version=2;
-
-}
-
-void v2()
+if(shape[0].y+3<max_cols-1)
 {
-int t=0;
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y+1;
 
-if(check_boundary(shape[0].x,shape[0].y)==1)
+shape[2].x=shape[0].x;
+shape[2].y=shape[0].y+2;
+
+shape[3].x=shape[0].x;
+shape[3].y=shape[0].y+3;
+
+version--;
+}
+}
+
+else if(version==4)
 {
-
-if(check_boundary(shape[1].x-1,shape[1].y+1)==1)
+if(shape[0].x+3<max_cols-1)
 {
+shape[1].x=shape[0].x+1;
+shape[1].y=shape[0].y;
 
-if(check_boundary(shape[2].x-2,shape[2].y+2)==1)
-{
-if(check_boundary(shape[3].x-3,shape[3].y+3)==1)
-{
-t=1;
+shape[2].x=shape[0].x+2;
+shape[2].y=shape[0].y;
+
+shape[3].x=shape[0].x+3;
+shape[3].y=shape[0].y;
+
+version--;
 }
 }
-}
-}
 
-if(t==1)
-{
 
-shape[0].x=shape[0].x;
-shape[0].y=shape[0].y;
-
-shape[1].x=shape[1].x-1;
-shape[1].y=shape[1].y+1;
-
-shape[2].x=shape[2].x-2;
-shape[2].y=shape[2].y+2;
-
-shape[3].x=shape[3].x-3;
-shape[3].y=shape[3].y+3;
-}
-else
-version=1;
 
 }
-
-
 
 
 
@@ -453,13 +567,14 @@ shape[2]=new Point(2,col);
 shape[3]=new Point(2,col+1);
 }
 
-
-void select_version()
+void rotate_clockwise()
 {
-    
+
 }
+void rotate_anticlockwise()
+{
 
-
+}
 
 }
 
@@ -499,214 +614,155 @@ shape[3]=new Point(3,col+1);
 
 }
 
-
-void select_version()
+void rotate_clockwise()
 {
 if(version==1)
-{version=2;
-v2();
-return;
+{
+if(shape[0].y+2<max_cols-1 && shape[0].x+1<max_cols-1)
+{
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y+1;
+
+shape[2].x=shape[0].x;
+shape[2].y=shape[0].y+2;
+
+shape[3].x=shape[0].x+1;
+shape[3].y=shape[0].y;
+
+version++;
+}
+
 }
 
 else if(version==2)
 {
-version=3;
-v3();
-return;
+if(shape[0].x+2<max_cols-1 && shape[0].y-1>0)
+{
+shape[1].x=shape[0].x+1;
+shape[1].y=shape[0].y;
+
+shape[2].x=shape[0].x+2;
+shape[2].y=shape[0].y;
+
+shape[3].x=shape[0].x;
+shape[3].y=shape[0].y-1;
+
+version++;
+}
 }
 
 else if(version==3)
 {
-version=4;
-v4();
-return;
+if(shape[0].x-1>0 && shape[0].y-2>0)
+{
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y-1;
+
+shape[2].x=shape[0].x;
+shape[2].y=shape[0].y-2;
+
+shape[3].x=shape[0].x-1;
+shape[3].y=shape[0].y;
+
+version++;
+}
 }
 
 else if(version==4)
 {
+if(shape[0].x+2<max_cols-1 && shape[0].y+1<max_cols-1)
+{
+shape[1].x=shape[0].x+1;
+shape[1].y=shape[0].y;
+
+shape[2].x=shape[0].x+2;
+shape[2].y=shape[0].y;
+
+shape[3].x=shape[0].x+2;
+shape[3].y=shape[0].y+1;
+
 version=1;
-v1();
-return;
 }
 }
 
 
-void v1()
+}
+
+
+void rotate_anticlockwise()
 {
-
-
-int t=0;
-
-if(check_boundary(shape[0].x-2,shape[0].y)==1)
+if(version==1)
 {
-
-if(check_boundary(shape[1].x-1,shape[1].y-1)==1)
+if(shape[0].x-1>0    &&  shape[0].y-2>0)
 {
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y-1;
 
-if(check_boundary(shape[2].x,shape[2].y-2)==1)
-{
-if(check_boundary(shape[3].x+1,shape[3].y-1)==1)
-{
-t=1;
-}
-}
-}
-}
+shape[2].x=shape[0].x;
+shape[2].y=shape[0].y-2;
 
-if(t==1)
-{
-
-shape[0].x=shape[0].x-2;
-shape[0].y=shape[0].y;
-
-shape[1].x=shape[1].x-1;
-shape[1].y=shape[1].y-1;
-
-shape[2].x=shape[2].x;
-shape[2].y=shape[2].y-2;
-
-shape[3].x=shape[3].x+1;
-shape[3].y=shape[3].y-1;
-
-}
-else
+shape[3].x=shape[0].x-1;
+shape[3].y=shape[0].y;
 version=4;
-
+}
 
 }
 
-void v2()
+else if(version==2)
 {
-
-
-int t=0;
-
-if(check_boundary(shape[0].x,shape[0].y+2)==1)
+if(shape[0].x+2<max_cols-1 && shape[0].y+1<max_cols-1)
 {
+shape[1].x=shape[0].x+1;
+shape[1].y=shape[0].y;
 
-if(check_boundary(shape[1].x-1,shape[1].y+1)==1)
+shape[2].x=shape[0].x+2;
+shape[2].y=shape[0].y;
+
+shape[3].x=shape[0].x+2;
+shape[3].y=shape[0].y+1;
+
+version--;
+}
+}
+
+else if(version==3)
 {
-
-if(check_boundary(shape[2].x-2,shape[2].y)==1)
+if(shape[0].x+1<19 && shape[0].y+2<19)
 {
-if(check_boundary(shape[3].x-1,shape[3].y-1)==1)
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y+1;
+
+shape[2].x=shape[0].x;
+shape[2].y=shape[0].y+2;
+
+shape[3].x=shape[0].x+1;
+shape[3].y=shape[0].y;
+
+version--;
+}
+}
+
+else if(version==4)
 {
-t=1;
-}
-}
-}
-}
-
-if(t==1)
+if(shape[0].y-1>0 && shape[0].x+2<max_cols-1)
 {
+shape[1].x=shape[0].x+1;
+shape[1].y=shape[0].y;
 
-shape[0].x=shape[0].x;
-shape[0].y=shape[0].y+2;
+shape[2].x=shape[0].x+2;
+shape[2].y=shape[0].y;
 
-shape[1].x=shape[1].x-1;
-shape[1].y=shape[1].y+1;
+shape[3].x=shape[0].x;
+shape[3].y=shape[0].y-1;
 
-shape[2].x=shape[2].x-2;
-shape[2].y=shape[2].y;
-
-shape[3].x=shape[3].x-1;
-shape[3].y=shape[3].y-1;
-
+version--;
 }
-else
-version=1;
+}
 
 
 
 }
 
-
-void v3()
-{
-
-int t=0;
-
-if(check_boundary(shape[0].x+2,shape[0].y)==1)
-{
-
-if(check_boundary(shape[1].x+1,shape[1].y+1)==1)
-{
-
-if(check_boundary(shape[2].x,shape[2].y+2)==1)
-{
-if(check_boundary(shape[3].x-1,shape[3].y+1)==1)
-{
-t=1;
-}
-}
-}
-}
-
-if(t==1)
-{
-
-shape[0].x=shape[0].x+2;
-shape[0].y=shape[0].y;
-
-shape[1].x=shape[1].x+1;
-shape[1].y=shape[1].y+1;
-
-shape[2].x=shape[2].x;
-shape[2].y=shape[2].y+2;
-
-shape[3].x=shape[3].x-1;
-shape[3].y=shape[3].y+1;
-}
-else
-version=2;
-
-
-}
-
-
-void v4()
-{
-
-
-int t=0;
-
-if(check_boundary(shape[0].x,shape[0].y-2)==1)
-{
-
-if(check_boundary(shape[1].x+1,shape[1].y-1)==1)
-{
-
-if(check_boundary(shape[2].x+2,shape[2].y)==1)
-{
-if(check_boundary(shape[3].x+1,shape[3].y+1)==1)
-{
-t=1;
-}
-}
-}
-}
-
-if(t==1)
-{
-
-shape[0].x=shape[0].x;
-shape[0].y=shape[0].y-2;
-
-shape[1].x=shape[1].x+1;
-shape[1].y=shape[1].y-1;
-
-shape[2].x=shape[2].x+2;
-shape[2].y=shape[2].y;
-
-shape[3].x=shape[3].x+1;
-shape[3].y=shape[3].y+1;
-
-}
-else
-version=3;
-
-
-}
 
 
 
@@ -748,218 +804,165 @@ shape[3]=new Point(2,col+2);
 
 }
 
-
-void select_version()
+void rotate_clockwise()
 {
 if(version==1)
-{version=2;
-v2();
+{
+if(shape[0].y-1>0 && shape[0].x+2<max_cols-1)
+{
+shape[1].x=shape[0].x+1;
+shape[1].y=shape[0].y;
+
+shape[2].x=shape[0].x+2;
+shape[2].y=shape[0].y;
+
+shape[3].x=shape[0].x+1;
+shape[3].y=shape[0].y-1;
+
+version++;
+}
+
 }
 
 else if(version==2)
 {
-version=3;
-v3();
+if(shape[0].x-1>0 && shape[0].y+2<max_cols-1)
+{
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y+1;
+
+shape[2].x=shape[0].x;
+shape[2].y=shape[0].y+2;
+
+shape[3].x=shape[0].x-1;
+shape[3].y=shape[0].y+1;
+
+version++;
+}
 }
 
 else if(version==3)
 {
-version=4;
-v4();
+if(shape[0].x+2<max_cols-1 && shape[0].y+1<max_cols-1)
+{
+shape[1].x=shape[0].x+1;
+shape[1].y=shape[0].y;
+
+shape[2].x=shape[0].x+2;
+shape[2].y=shape[0].y;
+
+shape[3].x=shape[0].x+1;
+shape[3].y=shape[0].y+1;
+
+version++;
+}
 }
 
 else if(version==4)
 {
+if(shape[0].x+1<max_cols-1 && shape[0].y+2<max_cols-1)
+{
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y+1;
+
+shape[2].x=shape[0].x;
+shape[2].y=shape[0].y+2;
+
+shape[3].x=shape[0].x+1;
+shape[3].y=shape[0].y+1;
+
 version=1;
-v1();
 }
 }
 
 
-void v1()
+}
+
+
+void rotate_anticlockwise()
 {
-
-
-int t=0;
-
-if(check_boundary(shape[0].x-1,shape[0].y)==1)
+if(version==1)
 {
-
-if(check_boundary(shape[1].x-1,shape[1].y-2)==1)
+if(shape[0].y+1<max_cols-1    &&  shape[0].x+2<max_cols-1)
 {
+shape[1].x=shape[0].x+1;
+shape[1].y=shape[0].y;
 
-if(check_boundary(shape[2].x,shape[2].y-1)==1)
-{
-if(check_boundary(shape[3].x+1,shape[3].y)==1)
-{
-t=1;
-}
-}
-}
-}
+shape[2].x=shape[0].x+2;
+shape[2].y=shape[0].y;
 
-if(t==1)
-{
-
-shape[0].x=shape[0].x-1;
-shape[0].y=shape[0].y;
-
-shape[1].x=shape[1].x-1;
-shape[1].y=shape[1].y-2;
-
-shape[2].x=shape[2].x;
-shape[2].y=shape[2].y-1;
-
-shape[3].x=shape[3].x+1;
-shape[3].y=shape[3].y;
-}
-
-else
+shape[3].x=shape[0].x+1;
+shape[3].y=shape[0].y+1;
 version=4;
-
-
+}
 
 }
 
-void v2()
+else if(version==2)
 {
-
-
-int t=0;
-
-if(check_boundary(shape[0].x+1,shape[0].y)==1)
+if(shape[0].x+1<max_cols-1 && shape[0].y+2<max_cols-1)
 {
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y+1;
 
-if(check_boundary(shape[1].x-1,shape[1].y)==1)
+shape[2].x=shape[0].x;
+shape[2].y=shape[0].y+2;
+
+shape[3].x=shape[0].x+1;
+shape[3].y=shape[0].y+1;
+
+version--;
+}
+}
+
+else if(version==3)
 {
-
-if(check_boundary(shape[2].x,shape[2].y-1)==1)
+if(shape[0].x+2<19 && shape[0].y-1>0)
 {
-if(check_boundary(shape[3].x+1,shape[3].y-2)==1)
+shape[1].x=shape[0].x+1;
+shape[1].y=shape[0].y;
+
+shape[2].x=shape[0].x+2;
+shape[2].y=shape[0].y;
+
+shape[3].x=shape[0].x+1;
+shape[3].y=shape[0].y-1;
+
+version--;
+}
+}
+
+else if(version==4)
 {
-t=1;
-}
-}
-}
-}
-
-if(t==1)
+if(shape[0].y+2>max_cols-1 && shape[0].x-1>0)
 {
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y+1;
 
-shape[0].x=shape[0].x+1;
-shape[0].y=shape[0].y;
+shape[2].x=shape[0].x;
+shape[2].y=shape[0].y+2;
 
-shape[1].x=shape[1].x-1;
-shape[1].y=shape[1].y;
+shape[3].x=shape[0].x-1;
+shape[3].y=shape[0].y+1;
 
-shape[2].x=shape[2].x;
-shape[2].y=shape[2].y-1;
-
-shape[3].x=shape[3].x+1;
-shape[3].y=shape[3].y-2;
-
+version--;
 }
-else
-version=1;
+}
 
 
 
 }
 
 
-void v3()
-{
-
-
-int t=0;
-
-if(check_boundary(shape[0].x,shape[0].y)==1)
-{
-
-if(check_boundary(shape[1].x,shape[1].y)==1)
-{
-
-if(check_boundary(shape[2].x-1,shape[2].y+1)==1)
-{
-if(check_boundary(shape[3].x-2,shape[3].y+2)==1)
-{
-t=1;
-}
-}
-}
-}
-
-if(t==1)
-{
-
-shape[0].x=shape[0].x;
-shape[0].y=shape[0].y;
-
-shape[1].x=shape[1].x;
-shape[1].y=shape[1].y;
-
-shape[2].x=shape[2].x-1;
-shape[2].y=shape[2].y+1;
-
-shape[3].x=shape[3].x-2;
-shape[3].y=shape[3].y+2;
-}
-else
-version=2;
-
 
 }
 
 
-void v4()
-{
-
-
-
-int t=0;
-
-if(check_boundary(shape[0].x,shape[0].y)==1)
-{
-
-if(check_boundary(shape[1].x+2,shape[1].y+2)==1)
-{
-
-if(check_boundary(shape[2].x+1,shape[2].y+1)==1)
-{
-if(check_boundary(shape[3].x,shape[3].y)==1)
-{
-t=1;
-}
-}
-}
-}
-
-if(t==1)
-{
-
-shape[0].x=shape[0].x;
-shape[0].y=shape[0].y;
-
-shape[1].x=shape[1].x+2;
-shape[1].y=shape[1].y+2;
-
-shape[2].x=shape[2].x+1;
-shape[2].y=shape[2].y+1;
-
-shape[3].x=shape[3].x;
-shape[3].y=shape[3].y;
-}
-else
-version=3;
-}
-}
-
-
-class Shape5 extends Shapes
+class Z extends Shapes
 {
 
 int col;
-Shape5(){
+Z(){
 version=1;
 random_generate();
 }
@@ -989,211 +992,156 @@ shape[3]=new Point(3,col+1);
 
 }
 
-void select_version()
+
+
+void rotate_clockwise()
 {
 if(version==1)
-{version=2;
-v2();
+{
+if(shape[0].y-1>0 && shape[0].x+2<max_cols-1)
+{
+shape[1].x=shape[0].x+1;
+shape[1].y=shape[0].y;
+
+shape[2].x=shape[0].x+1;
+shape[2].y=shape[0].y-1;
+
+shape[3].x=shape[0].x+2;
+shape[3].y=shape[0].y-1;
+
+version++;
+}
+
 }
 
 else if(version==2)
 {
-version=3;
-v3();
+if(shape[0].x-1>0 && shape[0].y+2<max_cols-1)
+{
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y+1;
+
+shape[2].x=shape[0].x-1;
+shape[2].y=shape[0].y+1;
+
+shape[3].x=shape[0].x-1;
+shape[3].y=shape[0].y+2;
+
+version++;
+}
 }
 
 else if(version==3)
 {
-version=4;
-v4();
+if(shape[0].x+2<max_cols-1 && shape[0].y+1<max_cols-1)
+{
+shape[1].x=shape[0].x+1;
+shape[1].y=shape[0].y;
+
+shape[2].x=shape[0].x+1;
+shape[2].y=shape[0].y+1;
+
+shape[3].x=shape[0].x+2;
+shape[3].y=shape[0].y+1;
+
+version++;
+}
 }
 
 else if(version==4)
 {
+if(shape[0].x+1<max_cols-1 && shape[0].y+2<max_cols-1)
+{
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y+1;
+
+shape[2].x=shape[0].x+1;
+shape[2].y=shape[0].y+1;
+
+shape[3].x=shape[0].x+1;
+shape[3].y=shape[0].y+2;
+
 version=1;
-v1();
 }
 }
 
 
-void v1()
+}
+
+
+void rotate_anticlockwise()
 {
-
-
-int t=0;
-
-if(check_boundary(shape[0].x,shape[0].y)==1)
+if(version==1)
 {
-
-if(check_boundary(shape[1].x+1,shape[1].y-1)==1)
+if(shape[0].y+1<max_cols-1    &&  shape[0].x+2<max_cols-1)
 {
+shape[1].x=shape[0].x+1;
+shape[1].y=shape[0].y;
 
-if(check_boundary(shape[2].x,shape[2].y)==1)
-{
-if(check_boundary(shape[3].x+1,shape[3].y-1)==1)
-{
-t=1;
-}
-}
-}
-}
+shape[2].x=shape[0].x+1;
+shape[2].y=shape[0].y+1;
 
-if(t==1)
-{
-shape[0].x=shape[0].x;
-shape[0].y=shape[0].y;
-
-shape[1].x=shape[1].x+1;
-shape[1].y=shape[1].y-1;
-
-shape[2].x=shape[2].x;
-shape[2].y=shape[2].y;
-
-shape[3].x=shape[3].x+1;
-shape[3].y=shape[3].y-1;
-
-}
-else
+shape[3].x=shape[0].x+2;
+shape[3].y=shape[0].y+1;
 version=4;
-
+}
 
 }
 
-void v2()
+else if(version==2)
 {
-
-int t=0;
-
-if(check_boundary(shape[0].x,shape[0].y+2)==1)
+if(shape[0].x+1<max_cols-1 && shape[0].y+2<max_cols-1)
 {
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y+1;
 
-if(check_boundary(shape[1].x-1,shape[1].y+1)==1)
+shape[2].x=shape[0].x+1;
+shape[2].y=shape[0].y+1;
+
+shape[3].x=shape[0].x+1;
+shape[3].y=shape[0].y+2;
+
+version--;
+}
+}
+
+else if(version==3)
 {
-
-if(check_boundary(shape[2].x,shape[2].y)==1)
+if(shape[0].x+2<19 && shape[0].y-1>0)
 {
-if(check_boundary(shape[3].x-1,shape[3].y-1)==1)
+shape[1].x=shape[0].x+1;
+shape[1].y=shape[0].y;
+
+shape[2].x=shape[0].x+1;
+shape[2].y=shape[0].y-1;
+
+shape[3].x=shape[0].x+2;
+shape[3].y=shape[0].y-1;
+
+version--;
+}
+}
+
+else if(version==4)
 {
-t=1;
-}
-}
-}
-}
-
-if(t==1)
+if(shape[0].y+2>max_cols-1 && shape[0].x-1>0)
 {
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y+1;
 
-shape[0].x=shape[0].x;
-shape[0].y=shape[0].y+2;
+shape[2].x=shape[0].x-1;
+shape[2].y=shape[0].y+1;
 
-shape[1].x=shape[1].x-1;
-shape[1].y=shape[1].y+1;
+shape[3].x=shape[0].x-1;
+shape[3].y=shape[0].y+2;
 
-shape[2].x=shape[2].x;
-shape[2].y=shape[2].y;
-
-shape[3].x=shape[3].x-1;
-shape[3].y=shape[3].y-1;
+version--;
 }
-else
-version=1;
-
+}
 
 
 
 }
-
-
-void v3()
-{
-
-
-int t=0;
-
-if(check_boundary(shape[0].x+1,shape[0].y)==1)
-{
-
-if(check_boundary(shape[1].x,shape[1].y+1)==1)
-{
-
-if(check_boundary(shape[2].x,shape[2].y)==1)
-{
-if(check_boundary(shape[3].x+1,shape[3].y+1)==1)
-{
-t=1;
-}
-}
-}
-}
-
-if(t==1)
-{
-
-shape[0].x=shape[0].x+1;
-shape[0].y=shape[0].y;
-
-shape[1].x=shape[1].x;
-shape[1].y=shape[1].y+1;
-
-shape[2].x=shape[2].x;
-shape[2].y=shape[2].y;
-
-shape[3].x=shape[3].x+1;
-shape[3].y=shape[3].y+1;
-}
-else
-version=2;
-
-
-}
-
-
-void v4()
-{
-
-
-
-
-int t=0;
-
-if(check_boundary(shape[0].x-1,shape[0].y-2)==1)
-{
-
-if(check_boundary(shape[1].x,shape[1].y-1)==1)
-{
-
-if(check_boundary(shape[2].x,shape[2].y)==1)
-{
-if(check_boundary(shape[3].x-1,shape[3].y+1)==1)
-{
-t=1;
-}
-}
-}
-}
-
-if(t==1)
-{
-shape[0].x=shape[0].x-1;
-shape[0].y=shape[0].y-2;
-
-shape[1].x=shape[1].x;
-shape[1].y=shape[1].y-1;
-
-shape[2].x=shape[2].x;
-shape[2].y=shape[2].y;
-
-shape[3].x=shape[3].x-1;
-shape[3].y=shape[3].y+1;
-}
-else
-version=3;
-
-
-
-}
-
-
 
 
 }
@@ -1235,17 +1183,9 @@ public static void main(String args[])
 Tetris T=new Tetris();
     Board b=new Board();
     
-            
-        Undo u[]=new Undo[10];
-        Undo r[]=new Undo[10];
-        
+         
+     Stack_List undo=new Stack_List();   
       
-        for(int i=0;i<10;i++)
-        {
-            u[i]=new Undo();
-            r[i]=new Undo();
-        }
-        int undosize=0,redosize=0;
     
  T.random_generate();
     Shapes s=new Shapes();
@@ -1276,8 +1216,8 @@ Tetris T=new Tetris();
      }
      else
      {
-     s=new Shape5();
-       s1=new Shape5();   
+     s=new Z();
+       s1=new Z();   
      }
  
     
@@ -1329,6 +1269,8 @@ Tetris T=new Tetris();
             
           s.remove_prevshape(); 
                 
+                undo.push(move);
+                
             
                 
             }
@@ -1356,31 +1298,15 @@ Tetris T=new Tetris();
             b.display();
            
           s.remove_prevshape();
-               
+                  undo.push(move);
+                
               
            }
   
            
        }
         
-          
-       else if(move=='w')
-       {
-          
-        
-           s.up();
-           s1=s;
- 
-       s.generate_shape();
-           s1.generate_shape();
-            b.display();
-           
-          s.remove_prevshape();
-           s1.remove_prevshape();
-               
-             
-           
-       }
+   
         
         else if(move=='b')
         {
@@ -1406,7 +1332,8 @@ Tetris T=new Tetris();
                 s.remove_prevshape(); 
                 
            
-          
+             undo.push(move);
+                
         
             }
      
@@ -1414,7 +1341,7 @@ Tetris T=new Tetris();
           }
         
      else if(move=='c')       
-     {s.select_version();
+     {s.rotate_clockwise();
       s1=s;
       //s1.select_version();
 
@@ -1426,14 +1353,60 @@ Tetris T=new Tetris();
        
           s.remove_prevshape();
        s1.remove_prevshape();
+        undo.push(move);
      }
+        else if(move=='a')
+        {
+            s.rotate_anticlockwise();
+      s1=s;
+      //s1.select_version();
+
+       s.generate_shape();
+       s1.generate_shape();
+ 
+        b.display();
+        
+       
+          s.remove_prevshape();
+       s1.remove_prevshape();
+            
+              undo.push(move);
+        }
     
         else if(move=='u')
         {
                
+            if(undo.isEmpty()==true)
+            {
+           
+   
+                s.generate_shape();
+                b.display();
+                s.remove_prevshape();
+                
+            }
+            else
+            {
+          move=undo.peek();
+            if(move=='l')
+                s.right();
+            else if(move=='r')
+            s.left();
+                else if(move=='c')
+                    s.rotate_anticlockwise();
+                else if(move=='a')
+                    s.rotate_clockwise();
+            else if(move=='b')
+            { 
+                s.up();
+            }
+            undo.pop();
+        
+            s.generate_shape();
+          b.display();
             
-          
-            
+         s.remove_prevshape();  
+            }
             
             
         }
@@ -1443,11 +1416,10 @@ Tetris T=new Tetris();
  {
      
  }
-         
+     
          if(fixed==1)
         {
              
-            undosize=0;
         
      s=s1;
  
@@ -1477,8 +1449,8 @@ T.random_generate();
       s1=new T();
      }
      else
-     { s=new Shape5();
-      s1=new Shape5();
+     { s=new Z();
+      s1=new Z();
      }
  
 
