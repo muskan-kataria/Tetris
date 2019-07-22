@@ -4,11 +4,24 @@ interface Mystack
 {
     public void pop();
     public void push(char ch);
+   
     public char peek();
+  
     public Link delete();
+
     public boolean isEmpty();
 }
+interface Mystack2
+{
+ public void pop();
 
+    public void push(int no,int ver,int x,int y);
+  
+    public Link2 peek();
+  
+    public Link2 delete();
+    public boolean isEmpty();
+}
 class Link
 {
     public char option;
@@ -42,6 +55,7 @@ class Stack_List  implements Mystack
         top = link;
        
     }
+   
     
       public Link delete()
     {
@@ -65,6 +79,77 @@ class Stack_List  implements Mystack
     }
     
     }
+
+class Link2
+{
+    public int shape_no;
+    public int version;
+    public int x;
+    public int y;
+    public Link2 nextLink;
+    
+    public Link2(){}
+    
+       public Link2(int no,int ver,int x,int y)
+    {
+    shape_no=no;
+           version=ver;
+           this.x=x;
+           this.y=y;
+        nextLink=null;
+    }
+}
+
+
+class Stack_List2  implements Mystack2
+{
+    private Link2 top;
+    public Stack_List2()
+    {
+        top = null;
+    }
+    public boolean isEmpty()
+    {
+        return top == null;
+    }
+    
+     public void push(int no,int ver,int x,int y)
+    {
+      
+            Link2 link = new Link2(no,ver,x,y);
+            link.nextLink =top;
+        top = link;
+       
+    }
+    
+      public Link2 delete()
+    {
+        Link2 temp =top;
+        
+            top = top.nextLink;
+        
+        return temp;
+    }
+    
+    public void pop()
+    {
+       
+            Link2 deletedLink = delete();
+     
+       
+    }
+    public Link2 peek()
+    {
+    return top;
+    }
+    
+    }
+
+
+
+
+
+
 
 class Board
 {
@@ -169,6 +254,7 @@ shape=new Point[4];
     
     void rotate_clockwise(){}
     void rotate_anticlockwise(){}
+    void generate(){}
 void cordinates()
 {
 
@@ -188,6 +274,18 @@ void cordinates()
         Board.delete_row();
         
         return 0;
+    }
+    
+      void subtract_from_flag()
+    {
+        
+
+      Board.flag[shape[0].x]-=1;
+       Board.flag[shape[1].x]-=1;
+         Board.flag[shape[2].x]-=1;
+         Board.flag[shape[3].x]-=1;
+        
+        
     }
 
 int check_bottom()
@@ -349,7 +447,13 @@ Stick(){
 version=1;
 random_generate();
 }
-
+Stick(int x,int y)
+{
+shape[0]=new Point(x,y);
+shape[1]=new Point(x,y);
+shape[2]=new Point(x,y);
+shape[3]=new Point(x,y);
+}
 
 void random_generate()
 {
@@ -543,6 +647,13 @@ Square(){
 version=1;
 random_generate();
 }
+Square(int x,int y)
+{
+shape[0]=new Point(x,y);
+shape[1]=new Point(x,y);
+shape[2]=new Point(x,y);
+shape[3]=new Point(x,y);
+}
 
 
 void random_generate()
@@ -569,10 +680,28 @@ shape[3]=new Point(2,col+1);
 
 void rotate_clockwise()
 {
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y+1;
+
+shape[2].x=shape[0].x+1;
+shape[2].y=shape[0].y;
+
+shape[3].x=shape[0].x+1;
+shape[3].y=shape[0].y+1;
+
 
 }
 void rotate_anticlockwise()
 {
+
+shape[1].x=shape[0].x;
+shape[1].y=shape[0].y+1;
+
+shape[2].x=shape[0].x+1;
+shape[2].y=shape[0].y;
+
+shape[3].x=shape[0].x+1;
+shape[3].y=shape[0].y+1;
 
 }
 
@@ -586,7 +715,13 @@ L(){
 version=1;
 random_generate();
 }
-
+L(int x,int y)
+{
+shape[0]=new Point(x,y);
+shape[1]=new Point(x,y);
+shape[2]=new Point(x,y);
+shape[3]=new Point(x,y);
+}
 
 void random_generate()
 {
@@ -778,6 +913,13 @@ version=1;
 random_generate();
 }
 
+T(int x,int y)
+{
+shape[0]=new Point(x,y);
+shape[1]=new Point(x,y);
+shape[2]=new Point(x,y);
+shape[3]=new Point(x,y);
+}
 
 void random_generate()
 {
@@ -797,10 +939,10 @@ random_generate();
 void cordinates()
 {
 
-shape[0]=new Point(1,col+1);
-shape[1]=new Point(2,col);
-shape[2]=new Point(2,col+1);
-shape[3]=new Point(2,col+2);
+shape[0]=new Point(1,col);
+shape[1]=new Point(1,col+1);
+shape[2]=new Point(1,col+2);
+shape[3]=new Point(2,col+1);
 
 }
 
@@ -966,7 +1108,13 @@ Z(){
 version=1;
 random_generate();
 }
-
+Z(int x,int y)
+{
+shape[0]=new Point(x,y);
+shape[1]=new Point(x,y);
+shape[2]=new Point(x,y);
+shape[3]=new Point(x,y);
+}
 
 void random_generate()
 {
@@ -986,9 +1134,9 @@ void cordinates()
 {
 
 shape[0]=new Point(1,col);
-shape[1]=new Point(2,col);
+shape[1]=new Point(1,col+1);
 shape[2]=new Point(2,col+1);
-shape[3]=new Point(3,col+1);
+shape[3]=new Point(2,col+2);
 
 }
 
@@ -1184,8 +1332,10 @@ Tetris T=new Tetris();
     Board b=new Board();
     
          
-     Stack_List undo=new Stack_List();   
-      
+     Stack_List undo=new Stack_List();
+    Stack_List2 undo2=new Stack_List2();
+      Stack_List redo=new Stack_List();
+    Stack_List2 redo2=new Stack_List2();
     
  T.random_generate();
     Shapes s=new Shapes();
@@ -1270,6 +1420,7 @@ Tetris T=new Tetris();
           s.remove_prevshape(); 
                 
                 undo.push(move);
+            
                 
             
                 
@@ -1299,7 +1450,7 @@ Tetris T=new Tetris();
            
           s.remove_prevshape();
                   undo.push(move);
-                
+            
               
            }
   
@@ -1388,6 +1539,7 @@ Tetris T=new Tetris();
             else
             {
           move=undo.peek();
+                redo.push(move);
             if(move=='l')
                 s.right();
             else if(move=='r')
@@ -1400,6 +1552,68 @@ Tetris T=new Tetris();
             { 
                 s.up();
             }
+              if(move=='s')
+              {
+                Link2 temp=new Link2();
+                temp=undo2.peek();
+                  //undo2.pop();
+                  T.shape_no=temp.shape_no;
+                  // System.out.println(T.shape_no);
+                  
+                  
+                    if(T.shape_no==0)
+    { s=new Stick(temp.x,temp.y);
+     s1=new Stick(temp.x,temp.y);
+     
+    }
+   else if(T.shape_no==1)
+   {s=new Square(temp.x,temp.y);
+    s1=new Square(temp.x,temp.y);
+   }
+   else if(T.shape_no==2)
+   { s=new L(temp.x,temp.y);
+    s1=new L(temp.x,temp.y);
+   }
+     else if(T.shape_no==3)
+     {s=new T(temp.x,temp.y);
+      s1=new T(temp.x,temp.y);
+      
+     }
+     else
+     {
+     s=new Z(temp.x,temp.y);
+       s1=new Z(temp.x,temp.y);   
+     }
+                 
+                  s.version=temp.version;
+                 
+                 
+                  if(s.version==1)
+                      s.version=4;
+                  else if(s.version==2)
+                      s.version=1;
+                  else if(s.version==3)
+                      s.version=2;
+                    else if(s.version==4)
+                      s.version=3;
+                  
+            
+                    
+            
+          redo2.push(temp.shape_no,temp.version,temp.x,temp.y);
+                
+           s.rotate_clockwise();
+                  
+                 // s.version=temp.version;
+                  s.subtract_from_flag();
+          
+            
+       
+                    undo2.pop();
+            
+                  
+              }
+                
             undo.pop();
         
             s.generate_shape();
@@ -1410,18 +1624,60 @@ Tetris T=new Tetris();
             
             
         }
+    
         
     
  else if(move=='o')
  {
-     
+   if(redo.isEmpty()==true)
+            {
+           
+   
+                s.generate_shape();
+                b.display();
+                s.remove_prevshape();
+                
+            }
+            else
+            {
+                
+               move=redo.peek();
+            if(move=='l')
+                s.left();
+            else if(move=='r')
+            s.right();
+                else if(move=='c')
+                    s.rotate_clockwise();
+                else if(move=='a')
+                    s.rotate_anticlockwise();
+            else if(move=='b')
+            { 
+                s.bottom();
+            }
+                else if(move=='s')
+                {
+     redo2.pop();
+                }
+            redo.pop();
+               
+            
+        
+            s.generate_shape();
+          b.display();
+            
+         s.remove_prevshape();  
+            }
  }
-     
+             
+         
          if(fixed==1)
         {
              
         
      s=s1;
+             char ch1='s';
+             undo.push(ch1);
+             undo2.push(T.shape_no,s.version,s.shape[0].x,s.shape[0].y);
  
                 if(over==1)
                     break;
