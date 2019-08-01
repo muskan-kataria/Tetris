@@ -194,16 +194,17 @@ for(i=0;i<max_rows;i++)
 {System.out.print(screen[i][j]);
 
 }
-System.out.println();
+
+ System.out.println();
 }
 }
     
     
-   public static  void delete_row()
+   public static  int delete_row()
     {
     
         int i,j;
-for(i=0;i<20;i++)
+for(i=1;i<19;i++)
 {
     if(flag[i]==18)
     {
@@ -212,13 +213,14 @@ for(i=0;i<20;i++)
         { screen[j]=screen[j-1];
          flag[j]=flag[j-1];
         }
-  
+        return 1;
     }
 }
-        
+   return 0; 
     }
 
 }
+
 
 class Point 
 {
@@ -268,10 +270,13 @@ void cordinates()
          Board.flag[shape[2].x]+=1;
          Board.flag[shape[3].x]+=1;
         
-        if(Board.flag[1]==1)
-            return 1;
-        
-        Board.delete_row();
+//        if(Board.flag[1]==1)
+//            return 1;
+//        
+       if( Board.delete_row()==1)
+           return 1;
+      
+         
         
         return 0;
     }
@@ -309,9 +314,8 @@ int check_bottom()
    
    
  if(Board.screen[shape[0].x][shape[0].y-1]=='#'||Board.screen[shape[1].x][shape[1].y-1]=='#'||Board.screen[shape[2].x][shape[2].y-1]=='#'||Board.screen[shape[3].x][shape[3].y-1]=='#')
-        return 1;
-    
-    else
+       return 1;
+       else
         return 0;
 }
     
@@ -322,7 +326,7 @@ int check_bottom()
    
    
  if(Board.screen[shape[0].x][shape[0].y+1]=='#'||Board.screen[shape[1].x][shape[1].y+1]=='#'||Board.screen[shape[2].x][shape[2].y+1]=='#'||Board.screen[shape[3].x][shape[3].y+1]=='#')
-        return 1;
+       return 1;
     
     else
         return 0;
@@ -1335,7 +1339,7 @@ Tetris T=new Tetris();
      Stack_List undo=new Stack_List();
     Stack_List2 undo2=new Stack_List2();
       Stack_List redo=new Stack_List();
-    Stack_List2 redo2=new Stack_List2();
+   
     
  T.random_generate();
     Shapes s=new Shapes();
@@ -1399,9 +1403,16 @@ Tetris T=new Tetris();
           
             if(s1.check_left()==1)
             {
-                fixed=1;
+               // fixed=1;
                   if(s1.update_flag()==1)
                 over=1;
+                
+                
+       s.generate_shape();
+        s1.generate_shape(); 
+        
+       b.display();
+                
                 s.remove_prevshape();
                 
                 
@@ -1433,9 +1444,14 @@ Tetris T=new Tetris();
           
           if(s.check_right()==1)
           {
-              fixed=1;
+              //fixed=1;
                 if( s1.update_flag()==1)
                    over=1;
+              
+              
+       s.generate_shape();
+           s1.generate_shape();
+            b.display();
               s.remove_prevshape();
           }
            
@@ -1465,10 +1481,9 @@ Tetris T=new Tetris();
        if(s1.check_bottom()==1)
        {
            fixed=1;
-             if( s1.update_flag()==1)
-       over=1;
+        
            s.remove_prevshape();
-           
+           s1=s;
            
        }
             else
@@ -1600,9 +1615,9 @@ Tetris T=new Tetris();
             
                     
             
-          redo2.push(temp.shape_no,temp.version,temp.x,temp.y);
                 
            s.rotate_clockwise();
+                  s1=s;
                   
                  // s.version=temp.version;
                   s.subtract_from_flag();
@@ -1652,11 +1667,43 @@ Tetris T=new Tetris();
                     s.rotate_anticlockwise();
             else if(move=='b')
             { 
-                s.bottom();
+              //  s.bottom();
+                
+               if(s1.check_bottom()==1)
+       {
+           fixed=1;
+             if( s1.update_flag()==1)
+       over=1;
+           s.remove_prevshape();
+           
+           
+       }
+            else
+            {
+            s.bottom();  
+            s1=s;
+ 
+       s.generate_shape();
+            s1.generate_shape();
+            
+              // b.display();
+                s.remove_prevshape(); 
+                
+           
+
+                
+        
+            }
+      
+                
+                
+                
+                
+                
             }
                 else if(move=='s')
                 {
-     redo2.pop();
+                    
                 }
             redo.pop();
                
@@ -1673,19 +1720,24 @@ Tetris T=new Tetris();
          if(fixed==1)
         {
              
-        
+             
+
      s=s1;
              char ch1='s';
              undo.push(ch1);
              undo2.push(T.shape_no,s.version,s.shape[0].x,s.shape[0].y);
  
-                if(over==1)
-                    break;
-  
+
+  {
        s.generate_shape();
        s1.generate_shape();
              
-        
+  } 
+             
+           if( s1.update_flag()==1)
+              { 
+               
+              }   
 T.random_generate();
     
     if(T.shape_no==0)
@@ -1725,16 +1777,16 @@ T.random_generate();
        
         }
     
-       move=sc.next().charAt(0);
-           T.clearscreen();
    
     
-            
+         
         
        
+       move=sc.next().charAt(0);
+           T.clearscreen();
     }
     
-    System.out.println("GAME OVER");
+  //  System.out.println("GAME OVER");
 
 }
 }
