@@ -254,8 +254,8 @@ shape=new Point[4];
 }
 
     
-    void rotate_clockwise(){}
-    void rotate_anticlockwise(){}
+    int rotate_clockwise(){ return 1;}
+    int rotate_anticlockwise(){return 1;}
     void generate(){}
 void cordinates()
 {
@@ -292,6 +292,18 @@ void cordinates()
         
         
     }
+    
+    int check_rotation()
+{
+   
+  
+   
+   if(Board.screen[shape[0].x][shape[0].y]=='#'||Board.screen[shape[1].x][shape[1].y]=='#'||Board.screen[shape[2].x][shape[2].y]=='#'||Board.screen[shape[3].x][shape[3].y]=='#')
+        return 1;
+    
+    else
+        return 0;
+}
 
 int check_bottom()
 {
@@ -485,8 +497,10 @@ shape[3]=new Point(4,col);
 
 
 
-void rotate_clockwise()
+int rotate_clockwise()
 {
+
+
 if(version==1)
 {
 if(shape[0].y+3<max_cols-1)
@@ -556,11 +570,11 @@ version=1;
 }
 }
 
-
+return check_rotation();
 }
 
 
-void rotate_anticlockwise()
+int rotate_anticlockwise()
 {
 System.out.println(version);
 if(version==1)
@@ -631,7 +645,7 @@ version--;
 }
 }
 
-
+return check_rotation();
 
 }
 
@@ -682,7 +696,7 @@ shape[2]=new Point(2,col);
 shape[3]=new Point(2,col+1);
 }
 
-void rotate_clockwise()
+int rotate_clockwise()
 {
 shape[1].x=shape[0].x;
 shape[1].y=shape[0].y+1;
@@ -693,9 +707,9 @@ shape[2].y=shape[0].y;
 shape[3].x=shape[0].x+1;
 shape[3].y=shape[0].y+1;
 
-
+return check_rotation();
 }
-void rotate_anticlockwise()
+int rotate_anticlockwise()
 {
 
 shape[1].x=shape[0].x;
@@ -707,6 +721,9 @@ shape[2].y=shape[0].y;
 shape[3].x=shape[0].x+1;
 shape[3].y=shape[0].y+1;
 
+
+
+return check_rotation();
 }
 
 }
@@ -753,7 +770,7 @@ shape[3]=new Point(3,col+1);
 
 }
 
-void rotate_clockwise()
+int rotate_clockwise()
 {
 if(version==1)
 {
@@ -824,11 +841,11 @@ version=1;
 }
 }
 
-
+return check_rotation();
 }
 
 
-void rotate_anticlockwise()
+int rotate_anticlockwise()
 {
 if(version==1)
 {
@@ -898,7 +915,7 @@ version--;
 }
 }
 
-
+return check_rotation();
 
 }
 
@@ -950,7 +967,7 @@ shape[3]=new Point(2,col+1);
 
 }
 
-void rotate_clockwise()
+int rotate_clockwise()
 {
 if(version==1)
 {
@@ -1020,12 +1037,12 @@ shape[3].y=shape[0].y+1;
 version=1;
 }
 }
-
+return check_rotation();
 
 }
 
 
-void rotate_anticlockwise()
+int rotate_anticlockwise()
 {
 if(version==1)
 {
@@ -1095,7 +1112,7 @@ version--;
 }
 }
 
-
+return check_rotation();
 
 }
 
@@ -1124,7 +1141,7 @@ void random_generate()
 {
 
 Random rand = new Random(); 
- int rand_int1 = rand.nextInt(max_cols-1); 
+ int rand_int1 = rand.nextInt(max_cols-4); 
  col=rand_int1;
  if(col==0||col==max_cols-2)
  {
@@ -1146,7 +1163,7 @@ shape[3]=new Point(2,col+2);
 
 
 
-void rotate_clockwise()
+int rotate_clockwise()
 {
 if(version==1)
 {
@@ -1217,11 +1234,11 @@ version=1;
 }
 }
 
-
+return check_rotation();
 }
 
 
-void rotate_anticlockwise()
+int rotate_anticlockwise()
 {
 if(version==1)
 {
@@ -1291,7 +1308,7 @@ version--;
 }
 }
 
-
+return check_rotation();
 
 }
 
@@ -1406,7 +1423,7 @@ Tetris T=new Tetris();
                // fixed=1;
                   if(s1.update_flag()==1)
                 over=1;
-                
+                s1=s;
                 
        s.generate_shape();
         s1.generate_shape(); 
@@ -1448,7 +1465,7 @@ Tetris T=new Tetris();
                 if( s1.update_flag()==1)
                    over=1;
               
-              
+              s1=s;
        s.generate_shape();
            s1.generate_shape();
             b.display();
@@ -1507,36 +1524,56 @@ Tetris T=new Tetris();
           }
         
      else if(move=='c')       
-     {s.rotate_clockwise();
-      s1=s;
-      //s1.select_version();
+     {
+         
+         s1.remove_prevshape();
+         s.remove_prevshape();
+         
+         if(s1.rotate_clockwise()==1)
+         {
+              s.generate_shape();
+             s1=s;
+    s1.generate_shape();
+}
+         
+         else
+         {
+             s1.generate_shape();
+             s=s1;
+             s.generate_shape();
+         }
+         
+         b.display();
+         s.remove_prevshape();
+         s1.remove_prevshape();
 
-       s.generate_shape();
-       s1.generate_shape();
- 
-        b.display();
-        
-       
-          s.remove_prevshape();
-       s1.remove_prevshape();
         undo.push(move);
      }
         else if(move=='a')
         {
-            s.rotate_anticlockwise();
-      s1=s;
-      //s1.select_version();
+                   s1.remove_prevshape();
+         s.remove_prevshape();
+         
+         if(s1.rotate_anticlockwise()==1)
+         {
+              s.generate_shape();
+             s1=s;
+    s1.generate_shape();
+}
+         
+         else
+         {
+             s1.generate_shape();
+             s=s1;
+             s.generate_shape();
+         }
+         
+         b.display();
+         s.remove_prevshape();
+         s1.remove_prevshape();
 
-       s.generate_shape();
-       s1.generate_shape();
- 
-        b.display();
-        
-       
-          s.remove_prevshape();
-       s1.remove_prevshape();
-            
-              undo.push(move);
+        undo.push(move);
+   
         }
     
         else if(move=='u')
